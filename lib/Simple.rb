@@ -30,8 +30,11 @@ class LexicalAnalyzer
          t = (0..par.length-1).select { |x| !par[x].nil? }
          t = t.shift
          v = par[t]
-         raise "Unexpected '#{v}'" if  t == UNEXPECTED
-         Fiber.yield Token.new(t, v)
+         if  t == UNEXPECTED
+           warn "Unexpected '#{v}' after '#$`'" 
+         else
+           Fiber.yield Token.new(t, v)
+         end
        end
        Fiber.yield nil
     end

@@ -24,7 +24,12 @@ class LexicalAnalyzer
   def initialize(input)
     @input = input
 
-    @regexp = %r{([-+*/()=;])|(\d+)|([a-zA-Z_]\w*)|(\S)}
+    @regexp = %r{
+         ([-+*/()=;])              # OPERATOR 
+       | (\d+)                     # NUMBER
+       | ([a-zA-Z_]\w*)            # ID 
+       |(\S)a                      # UNEXPECTED
+    }x
     @lexer = Fiber.new do
        input.scan(@regexp) do |par|
          t = (0..par.length-1).select { |x| !par[x].nil? }

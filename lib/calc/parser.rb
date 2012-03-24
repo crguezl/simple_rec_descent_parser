@@ -28,11 +28,11 @@ module Calc
     end
   end
 
-  class CalcParser
+  class Parser
     include Tokens
     attr_accessor :input, :lexer, :current_token
 
-    def initialize(input)
+    def initialize(input = '')
       @input = input
 
       @regexp = %r{
@@ -56,8 +56,13 @@ module Calc
          Fiber.yield  Token.new(EOI, nil)
       end
 
-      next_token
+      next_token if input.length > 0
 
+    end
+
+    def input=(val)
+      @input = val
+      next_token if input.length > 0
     end
 
     def match_val(v)
@@ -72,16 +77,18 @@ module Calc
        @current_token = @lexer.resume
     end
 
+    # Operator '=' is right associative
     def assignment
-      t1 = expression
-      val = "#{t1}"
+      val = []
+      val.push expression
+      asign = 0
       while (current_token.value == '=') 
-        op = current_token.value
+        raise "Error. Expected left-value, found #{val[-1]}" unless  val[-1] =~ /^[a-z_A-Z]\w*$/
+        asign += 1
         next_token
-        t2 = expression
-        val += " #{t2} #{op}"
+        val.push expression
       end
-      val
+      (val.join ' ') + ' ='*asign
     end
 
     def expression
@@ -118,7 +125,7 @@ module Calc
         sem
       elsif sem == '('            then
         next_token
-        e = expression()
+        e = assignment()
         match_val(')')
         e
       else
@@ -129,14 +136,20 @@ module Calc
 
   if $0 == __FILE__
     include Tokens
-    #calc = CalcParser.new(ARGV.shift || 'a = ( 2 + 5 )*3') 
+    #calc = Parser.new(ARGV.shift || 'a = ( 2 + 5 )*3') 
     #sc  = calc.lexer
     #while t = sc.resume
     #  puts t
     #end
 
     input = ARGV.shift || 'a = ( 2 - 3 ) * 5'
-    calc = CalcParser.new( input )
+    calc = Parser.new( input )
+    postfix =  calc.assignment()
+    raise "Unexpected #{calc.current_token}\n" unless calc.current_token.token == EOI
+    puts "The translation of '#{input}' to postfix is: #{postfix}"
+
+    input = '3 * 5'
+    calc = Parser.new( input )
     postfix =  calc.assignment()
     raise "Unexpected #{calc.current_token}\n" unless calc.current_token.token == EOI
     puts "The translation of '#{input}' to postfix is: #{postfix}"

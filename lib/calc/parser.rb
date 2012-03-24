@@ -117,19 +117,22 @@ module Calc
 
     def factor
       lookahead, sem  = current_token.token, current_token.value
-      if    lookahead == NUMBER   then
-        next_token
-        sem
-      elsif lookahead == ID       then
-        next_token
-        sem
-      elsif sem == '('            then
-        next_token
-        e = assignment()
-        match_val(')')
-        e
-      else
-        raise "Syntax error. Expected NUMBER or ID or '(', found #{current_token}"
+      case lookahead 
+        when NUMBER
+          next_token
+          sem
+        when ID
+          next_token
+          sem
+        else
+          if sem == '(' then
+            next_token
+            e = assignment()
+            match_val(')')
+            e
+          else
+            raise "Syntax error. Expected NUMBER or ID or '(', found #{current_token}"
+          end
       end
     end
   end

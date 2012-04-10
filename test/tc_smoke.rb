@@ -14,6 +14,14 @@ class TestCalcParser < Test::Unit::TestCase
       assert_equal expected, postfix
     end
 
+    input = 'a =  5 - 3 - 2'
+    expected = 'a 5 3 - 2 - ='
+    calc = Calc::Parser.new( input )
+    postfix =  calc.assignment()
+    should "be #{expected} for #{input}" do
+      assert_equal expected, postfix
+    end
+
     input = 'a = b = 4 + 2'
     expected = 'a b 4 2 + = ='
     calc = Calc::Parser.new( input )

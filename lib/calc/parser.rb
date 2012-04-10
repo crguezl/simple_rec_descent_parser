@@ -80,7 +80,7 @@ module Calc
     end
 
     # Operator '=' is right associative
-    def assignment
+    def assignment     # assignment --> expression '=' assignment | expression
       val = []
       val.push expression
       asign = 0
@@ -93,9 +93,9 @@ module Calc
       (val.join ' ') + ' ='*asign
     end
 
-    def expression
+    def expression   # expression --> expresion /^[+-]$/ term | term
       t1 = term
-      val = "#{t1}"
+      val = "#{t1}"  # expression --> term ( /^[+-]$/ term ) *
       while (current_token.value =~ /^[+-]$/) 
         op = current_token.value
         next_token
@@ -111,7 +111,7 @@ module Calc
       while (current_token.value =~ %r{^[*/]$}) 
         op = current_token.value
         next_token
-        t = term
+        t = factor
         val += " #{t} #{op}"
       end
       val

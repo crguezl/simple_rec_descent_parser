@@ -35,7 +35,7 @@ module Calc
     attr_accessor :input, :lexer, :current_token
 
     def initialize(input = '')
-      @input = input
+      @input = input                 
 
       @regexp = %r{
            ([-+*/()=;])              # OPERATOR 
@@ -45,10 +45,10 @@ module Calc
       }x
 
       @lexer = Fiber.new do
-         input.scan(@regexp) do |par|
-           t = (0..par.length-1).select { |x| !par[x].nil? }
-           t = t.shift
-           v = par[t]
+         input.scan(@regexp) do |par|  # [ nil, nil, 'a', nil ]
+           t = (0..par.length-1).select { |x| !par[x].nil? }  # [ 2 ]
+           t = t.shift                 # 2
+           v = par[t]                  # 'a'
            if  t == UNEXPECTED
              warn "Unexpected '#{v}' after '#$`'" 
            else
@@ -58,7 +58,7 @@ module Calc
          Fiber.yield  Token.new(EOI, nil)
       end
 
-      next_token if input.length > 0
+      next_token 
 
     end
 
@@ -71,7 +71,7 @@ module Calc
       if (v == current_token.value)
         next_token
       else
-        raise "Syntax error. Expected '#{v}', found '#{current_token}'"
+        raise SyntaxError, "Syntax error. Expected '#{v}', found '#{current_token}'"
       end
     end
 
@@ -85,7 +85,7 @@ module Calc
       val.push expression
       asign = 0
       while (current_token.value == '=') 
-        raise "Error. Expected left-value, found #{val[-1]}" unless  val[-1] =~ /^[a-z_A-Z]\w*$/
+        raise SyntaxError, "Error. Expected left-value, found #{val[-1]}" unless  val[-1] =~ /^[a-z_A-Z]\w*$/
         asign += 1
         next_token
         val.push expression
@@ -133,7 +133,7 @@ module Calc
             match_val(')')
             e
           else
-            raise "Syntax error. Expected NUMBER or ID or '(', found #{current_token}"
+            raise SyntaxError, "Syntax error. Expected NUMBER or ID or '(', found #{current_token}"
           end
       end
     end
@@ -150,13 +150,13 @@ module Calc
     input = ARGV.shift || 'a = ( 2 - 3 ) * 5'
     calc = Parser.new( input )
     postfix =  calc.assignment()
-    raise "Unexpected #{calc.current_token}\n" unless calc.current_token.token == EOI
+    raise SyntaxError, "Unexpected #{calc.current_token}\n" unless calc.current_token.token == EOI
     puts "The translation of '#{input}' to postfix is: #{postfix}"
 
     input = '3 * 5'
     calc = Parser.new( input )
     postfix =  calc.assignment()
-    raise "Unexpected #{calc.current_token}\n" unless calc.current_token.token == EOI
+    raise SyntaxError, "Unexpected #{calc.current_token}\n" unless calc.current_token.token == EOI
     puts "The translation of '#{input}' to postfix is: #{postfix}"
   end
 end

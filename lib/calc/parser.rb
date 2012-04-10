@@ -105,9 +105,9 @@ module Calc
       val
     end
 
-    def term
+    def term     # term --> term /^[*/]$/ factor | factor
       f = factor
-      val = "#{f}"
+      val = "#{f}"    # term --> factor (/^[*/]$/ factor) *
       while (current_token.value =~ %r{^[*/]$}) 
         op = current_token.value
         next_token

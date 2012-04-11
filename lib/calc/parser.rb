@@ -139,11 +139,6 @@ module Calc
 
   if $0 == __FILE__
     include Tokens
-    #calc = Parser.new(ARGV.shift || 'a = ( 2 + 5 )*3') 
-    #sc  = calc.lexer
-    #while t = sc.resume
-    #  puts t
-    #end
 
     input = ARGV.shift || 'a = ( 2 - 3 ) * 5'
     calc = Parser.new( input )

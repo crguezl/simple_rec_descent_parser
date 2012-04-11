@@ -81,16 +81,14 @@ module Calc
 
     # Operator '=' is right associative
     def assignment     # assignment --> expression '=' assignment | expression
-      val = []
-      val.push expression
-      asign = 0
-      while (current_token.value == '=') 
-        raise SyntaxError, "Error. Expected left-value, found #{val[-1]}" unless  val[-1] =~ /^[a-z_A-Z]\w*$/
-        asign += 1
+      val = expression
+      if (current_token.value == '=') 
+        #raise SyntaxError, "Error. Expected left-value, found #{val[-1]}" unless  val[-1] =~ /^[a-z_A-Z]\w*$/
         next_token
-        val.push expression
+        "#{val} #{assignment} ="
+      else
+        val
       end
-      (val.join ' ') + ' ='*asign
     end
 
     def expression   # expression --> expresion /^[+-]$/ term | term

@@ -5,3 +5,24 @@ for a detailed description
 Example for "Procesadores de Lenguajes"
 Grado de Informática
 Universidad de La Laguna
+
+assignment   : expression '=' assignment
+             | expression
+;
+expression   : expression ADDOP term
+             | term
+;
+term         : term MULOP factor
+             | factor
+
+factor       : NUMBER
+             | ID
+             | '(' assignment ')'
+;
+
+where:
+
+ADDOP  = /^[-+]$/
+MULOP  = %r{^[*/]$}
+NUMBER = /^\d+$/
+ID     = /[a-zA-Z_]\w*/

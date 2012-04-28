@@ -13,7 +13,9 @@ class TestCalcParser < Test::Unit::TestCase
     should "be #{expected} for #{input}" do
       assert_equal expected, postfix
     end
+  end
 
+  context "translating" do
     input = 'a =  5 - 3 - 2'
     expected = 'a 5 3 - 2 - ='
     calc = Calc::Parser.new( input )
@@ -21,7 +23,9 @@ class TestCalcParser < Test::Unit::TestCase
     should "be #{expected} for #{input}" do
       assert_equal expected, postfix
     end
+  end
 
+  context "translating" do
     input = 'a = b = 4 + 2'
     expected = 'a b 4 2 + = ='
     calc = Calc::Parser.new( input )
@@ -32,17 +36,19 @@ class TestCalcParser < Test::Unit::TestCase
   end
 
   context "exceptions" do
-    input = ''
+    input = '2'
     calc = Calc::Parser.new( input )
     should "Should raise 'SyntaxError' exception for #{input}" do
       assert_raises(SyntaxError) {
         calc.assignment()
       } 
     end
+  end
 
+  context "exceptions" do
     input = '3*/4'
     calc = Calc::Parser.new( input )
-    should "Should raise 'SyntaxError' exception for #{input}" do
+    should "Should raise 'SyntaxError' exception for '3*4'" do
       assert_raises(SyntaxError) {
         calc.assignment()
       } 

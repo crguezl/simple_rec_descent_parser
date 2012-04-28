@@ -32,7 +32,8 @@ module Calc
 
   class Parser
     include Tokens
-    attr_accessor :input, :lexer, :current_token
+    attr_reader :input
+    attr_accessor :lexer, :current_token
 
     def initialize(input = '')
       @input = input                 

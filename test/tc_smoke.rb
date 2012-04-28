@@ -36,7 +36,7 @@ class TestCalcParser < Test::Unit::TestCase
     calc = Calc::Parser.new( input )
     should "Should raise 'SyntaxError' exception for #{input}" do
       assert_raises(SyntaxError) {
-        postfix =  calc.assignment()
+        calc.assignment()
       } 
     end
 
@@ -44,7 +44,7 @@ class TestCalcParser < Test::Unit::TestCase
     calc = Calc::Parser.new( input )
     should "Should raise 'SyntaxError' exception for #{input}" do
       assert_raises(SyntaxError) {
-        postfix =  calc.assignment()
+        calc.assignment()
       } 
     end
   end

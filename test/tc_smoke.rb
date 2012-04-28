@@ -36,7 +36,7 @@ class TestCalcParser < Test::Unit::TestCase
   end
 
   context "exceptions" do
-    input = '2'
+    input = ''
     calc = Calc::Parser.new( input )
     should "Should raise 'SyntaxError' exception for #{input}" do
       assert_raises(SyntaxError) {
